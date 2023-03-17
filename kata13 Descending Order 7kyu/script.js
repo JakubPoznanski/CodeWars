@@ -3,4 +3,5 @@ function descendingOrder(n) {
   const numb = Number([...n.toString()].sort().reverse().join(""));
   return numb;
 }
+
 console.log(descendingOrder(31413231));

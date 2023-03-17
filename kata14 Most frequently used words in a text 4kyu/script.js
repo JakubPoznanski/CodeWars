@@ -26,5 +26,6 @@ https: function topThreeWords(text) {
       }
     });
   }
+
   return finalArr;
 }
