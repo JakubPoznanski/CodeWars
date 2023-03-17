@@ -1,3 +1,4 @@
+//https://www.codewars.com/kata/5262119038c0985a5b00029f
 // Define a function that takes an integer argument and
 // returns a logical value true or false dependingon if the integer is a prime.
 
