@@ -1,15 +1,14 @@
+//https://www.codewars.com/kata/52bb6539a4cf1b12d90005b7
 function validateBattlefield(field) {
   const ocean = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    Array(field.length).fill(0),
     ...field,
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    Array(field.length).fill(0),
   ];
   ocean.forEach((arr) => {
     arr.push(0);
     arr.unshift(0);
   });
-  console.log(ocean);
-
   const battleship = {
     size: 4,
     amount: 1,
@@ -34,8 +33,8 @@ function validateBattlefield(field) {
   const check = function (row, column) {
     let long = 1;
     let position = "dot";
-    let rightCounter = column + 1;
     let leftCounter = column - 1;
+    let rightCounter = column + 1;
     let upCounter = row - 1;
     let downCounter = row + 1;
     const currentCords = [[row, column]];
@@ -66,20 +65,17 @@ function validateBattlefield(field) {
     };
     const checkUpDown = function () {
       while (long <= 3 && upCounter >= row - 3 && downCounter <= row + 3) {
-        console.log("updown iteration");
         if (
-          ocean[upCounter][column] === 1 &&
+          ocean[upCounter]?.[column] === 1 &&
           ocean[upCounter + 1][column] === 1
         ) {
           currentCords.push([upCounter, column]);
-          console.log("pushup");
           long++;
         }
         if (
-          ocean[downCounter][column] === 1 &&
+          ocean[downCounter]?.[column] === 1 &&
           ocean[downCounter - 1][column] === 1
         ) {
-          console.log("pushdown");
           currentCords.push([downCounter, column]);
           long++;
         }
@@ -92,7 +88,6 @@ function validateBattlefield(field) {
       let returnFlag = true;
       if (position === "horizontal") {
         const onlyColumns = currentCords.map(([row, column]) => column);
-        console.log(onlyColumns);
         const max = Math.max.apply(null, onlyColumns) + 1;
         const min = Math.min.apply(null, onlyColumns) - 1;
         currentCords.forEach(([row, column]) => {
@@ -151,7 +146,6 @@ function validateBattlefield(field) {
     if (long === 1) checkUpDown();
     if (CheckAround()) {
       currentCords.forEach(([row, column]) => (ocean[row][column] = 0));
-      console.log(ocean);
       switch (long) {
         case battleship.size:
           battleship.cords.push(currentCords);
@@ -167,28 +161,27 @@ function validateBattlefield(field) {
           break;
         case submarine.size:
           submarine.cords.push(currentCords);
-          battleship.amount--;
+          submarine.amount--;
           break;
         default:
           break;
       }
     }
-    console.log(CheckAround(), "Czy dookoła jest pusto ?");
-    console.log(currentCords);
-    console.log(position);
-    console.log("long", long);
   };
+  for (let row = 1; row < ocean.length - 1; row++) {
+    for (let column = 1; column < ocean[1].length - 1; column++) {
+      if (ocean[row][column] === 1) {
+        check(row, column);
+      }
+    }
+  }
+  if (
+    battleship.amount === 0 &&
+    cruiser.amount === 0 &&
+    destroyer.amount === 0 &&
+    submarine.amount === 0
+  ) {
+    return true;
+  }
+  return false;
 }
-
-validateBattlefield([
-  [1, 1, 1, 1, 0, 1, 1, 0, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 0, 1, 0],
-  [0, 0, 1, 0, 1, 1, 1, 0, 1, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-  [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-  [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-]);
