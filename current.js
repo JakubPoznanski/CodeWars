@@ -1,12 +1,12 @@
 function validateBattlefield(field) {
   const ocean = [
-    ["v", "v", "v", "v", "v", "v", "v", "v", "v", "v"],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ...field,
-    ["v", "v", "v", "v", "v", "v", "v", "v", "v", "v"],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
   ocean.forEach((arr) => {
-    arr.push("v");
-    arr.unshift("v");
+    arr.push(0);
+    arr.unshift(0);
   });
   const width = field[1].length;
   console.log(ocean);
@@ -43,12 +43,12 @@ function validateBattlefield(field) {
     let position = "horizontal";
     let rightCounter = column + 1;
     let leftCounter = column - 1;
-    let upCounter = row + 1;
-    let downCounter = row - 1;
+    let upCounter = row - 1;
+    let downCounter = row + 1;
     while (
       long <= 4 &&
-      rightCounter <= column + 3 &&
-      leftCounter >= column - 3
+      rightCounter >= column + 3 &&
+      leftCounter <= column - 3
     ) {
       if (
         ocean[row][rightCounter] === 1 &&
@@ -65,33 +65,50 @@ function validateBattlefield(field) {
       rightCounter++;
     }
     if (long === 1) {
-      while (long <= 4 && upCounter <= column + 3 && downCounter >= column - 3)
+      while (long <= 4 && upCounter >= row - 3 && downCounter <= row + 3) {
         console.log("updown iteration");
-      {
         if (
           ocean[upCounter][column] === 1 &&
-          ocean[upCounter - 1][column] === 1
+          ocean[upCounter + 1][column] === 1
         ) {
           currentCords.push([upCounter, column]);
+          console.log("pushup");
           long++;
         }
         if (
           ocean[downCounter][column] === 1 &&
-          ocean[downCounter + 1][column] === 1
+          ocean[downCounter - 1][column] === 1
         ) {
+          console.log("pushdown");
           currentCords.push([downCounter, column]);
           long++;
         }
-        downCounter--;
-        upCounter++;
+        upCounter--;
+        downCounter++;
       }
+      if (long >= 2) position = "vertical";
     }
     //CheckAround
-
+    // if (position === "horizontal") {
+    //   currentCords.forEach(([row, column]) => {
+    //     if (ocean[row + 1][column] === 1 || ocean[row - 1][column] === 1) {
+    //       console.log("statek obok statku");
+    //     }
+    //     //brak sprawdzenia lewo,prawo
+    //   });
+    // }
+    // if (position === "vertical") {
+    //   currentCords.forEach(([row, column]) => {
+    //     if (ocean[row][column - 1] === 1 || ocean[row][column + 1] === 1) {
+    //       console.log("statek obok statku vertical");
+    //     }
+    //     //brak sprawdzenia góra dól
+    //   });
+    // }
     console.log(currentCords);
     console.log("long", long);
   };
-  checkLeftRight(3, 7);
+  checkLeftRight(8, 3);
 }
 // const checkDownUp = function (i, j) {};
 // for (let row = 0; row < field.length; row++) {
@@ -108,9 +125,9 @@ validateBattlefield([
   [1, 0, 1, 0, 1, 1, 1, 0, 1, 0],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-  [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-  [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+  [0, 0, 1, 0, 1, 1, 1, 0, 0, 0],
+  [0, 0, 1, 0, 0, 0, 0, 0, 1, 0],
+  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ]);
